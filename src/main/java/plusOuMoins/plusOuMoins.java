@@ -1,33 +1,46 @@
-package com.plusOuMoins; // Doit correspondre au nom du dossier créé
+package plusOuMoins;
 
 import javafx.application.Application;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.fxml.FXML;
 import javafx.scene.control.Button;
-import javafx.scene.layout.StackPane;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import java.util.Random;
+import java.util.Scanner;  // Import the Scanner class
 
-public class plusOuMoins extends Application {
 
-    @Override
-    public void start(Stage primaryStage) {
-        // 1. Créer un composant (Node)
-        Button btn = new Button("Clique sur moi !");
-        btn.setOnAction(e -> System.out.println("Bonjour le monde !"));
 
-        // 2. Créer un layout (Conteneur) et y ajouter le bouton
-        StackPane root = new StackPane();
-        root.getChildren().add(btn);
+public class plusOuMoins {
+     static void main(String[] args) {
+         while (true) {
+             Random generateur = new Random();
+             int nombreRDM = generateur.nextInt(101);
+             Scanner lecteur = new Scanner(System.in);
 
-        // 3. Créer la scène avec des dimensions (Largeur, Hauteur)
-        Scene scene = new Scene(root, 300, 250);
+             while (true) {
 
-        // 4. Configurer le Stage (la fenêtre)
-        primaryStage.setTitle("Ma Super App JavaFX");
-        primaryStage.setScene(scene);
-        primaryStage.show(); // Afficher la fenêtre
-    }
+                 System.out.print("Entre ton nombre : ");
+                 int inputUser = lecteur.nextInt();
 
-    public static void main(String[] args) {
-        launch(args); // Lance l'application
+                 if (inputUser == nombreRDM) {
+                     System.out.println("win");
+                     break;
+                 } else if (inputUser <= nombreRDM) {
+                     System.out.println("plus grand");
+                 } else {
+                     System.out.println("plus petit");
+                 }
+             }
+             Scanner continuer = new Scanner(System.in);
+             System.out.print("continué : ");
+             String ouiOuNon = continuer.nextLine();
+             if (ouiOuNon == "non"){
+                 break;
+             }
+         }
     }
 }
