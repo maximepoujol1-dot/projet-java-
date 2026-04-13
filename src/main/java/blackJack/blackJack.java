@@ -143,6 +143,11 @@ import java.util.Random;
             {
                 if (theDeck.get(y).equals(hand.get(i))){
                     power += getDeckValue().get(y);
+                    String slice1 = hand.get(i).substring(1, 2);
+                    String slice2 = hand.get(i).substring(1, 2);
+                    if (power>21 &&( slice1.equals("A") || slice2.equals("A") )){
+                        power -=10;
+                    }
                 }
             }
         }
