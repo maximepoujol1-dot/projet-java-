@@ -1,60 +1,119 @@
 package pendu;
 
-import java.util.ArrayList;
+import javafx.application.Application;
+import javafx.geometry.Pos;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 import java.util.Random;
-import java.util.Scanner;
 
-public class jeuDuPendu {
+public class jeuDuPendu extends Application {
 
-    public static void main(String[] args) {
-        String[] dictionnaire = {
-                "INTERFACE",
-                "PROGRAMME",
-                "ORDINATEUR",
-                "CASTOR",
-                "ORNITHORYNQUE",
-                "SANGLIER",
-        };
-        int vies = 7;
-        Random random = new Random();
-        Scanner scanner = new Scanner(System.in);
-        String mot = dictionnaire[random.nextInt(dictionnaire.length)];
-        char[] motcaracteres = mot.toCharArray();
-        char[] motdevinette = new char[motcaracteres.length];
-        for (int i = 0; i < motcaracteres.length; i++) {
-            motdevinette[i] = '_';
+    private String motATrouver;
+    private char[] motDevinette;
+    private int vies = 7;
+
+    // Éléments UI
+    private Label lblPendu = new Label();
+    private Label lblMot = new Label();
+    private Label lblStatus = new Label("Devinez le mot !");
+    private TextField inputLettre = new TextField();
+    private Button btnValider = new Button("Valider");
+    private Button btnRetour = new Button("⬅ Menu");
+    private Button btnRejouer = new Button("Rejouer");
+
+    // Dessins du pendu selon les vies restantes
+    private final String[] ETAPES_PENDU = {
+            "  +---+\n  |   |\n  O   |\n /|\\  |\n / \\  |\n      |\n=========",
+            "  +---+\n  |   |\n  O   |\n /|\\  |\n /    |\n      |\n=========",
+            "  +---+\n  |   |\n  O   |\n /|\\  |\n      |\n      |\n=========",
+            "  +---+\n  |   |\n  O   |\n /|   |\n      |\n      |\n=========",
+            "  +---+\n  |   |\n  O   |\n  |   |\n      |\n      |\n=========",
+            "  +---+\n  |   |\n  O   |\n      |\n      |\n      |\n=========",
+            "  +---+\n  |   |\n      |\n      |\n      |\n      |\n=========",
+            "  +---+\n      |\n      |\n      |\n      |\n      |\n========="  
+    };
+
+    public static void lancer(Stage stage) {
+        new jeuDuPendu().start(stage);
+    }
+
+    @Override
+    public void start(Stage stage) {
+        nouvellePartie();
+
+        // Style du dessin du pendu (Police monospace obligatoire pour l'alignement)
+        lblPendu.setStyle("-fx-font-family: 'Courier New'; -fx-font-size: 14px; -fx-font-weight: bold;");
+        lblMot.setStyle("-fx-font-size: 20px; -fx-letter-spacing: 5px; -fx-font-weight: bold;");
+        inputLettre.setMaxWidth(50);
+
+        btnValider.setOnAction(e -> jouer());
+        btnRejouer.setVisible(false);
+        btnRejouer.setOnAction(e -> start(stage));
+        btnRetour.setOnAction(e -> main.MainView.lancer(stage));
+
+        VBox root = new VBox(15, lblPendu, lblMot, lblStatus, inputLettre, btnValider, btnRejouer, btnRetour);
+        root.setAlignment(Pos.CENTER);
+        root.setStyle("-fx-padding: 30;");
+
+        stage.setScene(new Scene(root, 400, 500));
+        stage.setTitle("Jeu du Pendu");
+        stage.show();
+    }
+
+    private void nouvellePartie() {
+        String[] dictionnaire = {"INTERFACE", "PROGRAMME", "ORDINATEUR", "CASTOR", "ORNITHORYNQUE", "SANGLIER"};
+        motATrouver = dictionnaire[new Random().nextInt(dictionnaire.length)];
+        motDevinette = new char[motATrouver.length()];
+        for (int i = 0; i < motATrouver.length(); i++) motDevinette[i] = '_';
+
+        vies = 7;
+        majAffichage();
+        btnValider.setDisable(false);
+        btnRejouer.setVisible(false);
+    }
+
+    private void jouer() {
+        String saisie = inputLettre.getText().toUpperCase();
+        inputLettre.clear();
+
+        if (saisie.isEmpty()) return;
+        char lettre = saisie.charAt(0);
+        boolean trouve = false;
+
+        for (int i = 0; i < motATrouver.length(); i++) {
+            if (motATrouver.charAt(i) == lettre) {
+                motDevinette[i] = lettre;
+                trouve = true;
+            }
         }
-        while (vies > 0) {
-            System.out.println("\nMot à deviner : " + new String(motdevinette));
-            System.out.print("Veuillez entrer une lettre : ");
 
-            String saisie = scanner.nextLine().toUpperCase();
-            if (saisie.isEmpty()) continue;
-
-            char c = saisie.charAt(0);
-
-            boolean trouve = false;
-            for (int i = 0; i < motcaracteres.length; i++) {
-
-                if (motcaracteres[i] == c) {
-                    motdevinette[i] = c;
-                    trouve = true;
-                }
-            }
-
-            if (!trouve) {
-                vies--;
-                System.out.println("Lettre incorrecte. Vies restantes : " + vies);
-            }
-
-            if (!new String(motdevinette).contains("_")) {
-                System.out.println("\nBRAVO ! Le mot était : " + mot);
-                break;
-            }
+        if (!trouve) {
+            vies--;
         }
 
-        if (vies == 0) {
-            System.out.println("\nPERDU ! Le mot était : " + mot);
+        majAffichage();
+        verifierFin();
+    }
+
+    private void majAffichage() {
+        lblPendu.setText(ETAPES_PENDU[vies]);
+        lblMot.setText(new String(motDevinette));
+        lblStatus.setText("Vies restantes : " + vies);
+    }
+
+    private void verifierFin() {
+        if (!new String(motDevinette).contains("_")) {
+            lblStatus.setText("🎉 BRAVO ! Vous avez gagné !");
+            btnValider.setDisable(true);
+            btnRejouer.setVisible(true);
+        } else if (vies <= 0) {
+            lblStatus.setText("💀 PERDU ! Le mot était : " + motATrouver);
+            btnValider.setDisable(true);
+            btnRejouer.setVisible(true);
         }
     }
 }

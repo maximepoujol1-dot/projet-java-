@@ -9,6 +9,9 @@ import javafx.stage.Stage;
 // Importation de ton jeu
 import plusOuMoins.plusOuMoins;
 import trueOrFalse.trueOrFalse;
+import pendu.jeuDuPendu;
+import blackJack.BlackJack;
+import memory.memory;
 
 public class MainView extends Application {
 
@@ -32,9 +35,9 @@ public class MainView extends Application {
         btnTrueOrFalse.setOnAction(e -> trueOrFalse.lancer(stage));
 
         // Les autres restent vides pour l'instant
-        btnBlackJack.setOnAction(e -> System.out.println("Lancer BlackJack"));
-        btnMemory.setOnAction(e -> System.out.println("Lancer Memory"));
-        btnPendu.setOnAction(e -> System.out.println("Lancer Pendu"));
+        btnBlackJack.setOnAction(e -> BlackJack.lancer(stage));
+        btnMemory.setOnAction(e -> memory.lancer(stage));
+        btnPendu.setOnAction(e -> jeuDuPendu.lancer(stage));
 
         VBox root = new VBox(10, titre, btnBlackJack, btnMemory, btnPendu, btnPlusOuMoins, btnTrueOrFalse);
         root.setStyle("-fx-padding: 20; -fx-alignment: center;");

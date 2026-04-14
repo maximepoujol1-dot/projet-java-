@@ -1,219 +1,191 @@
 package blackJack;
 
+import javafx.application.Application;
+import javafx.geometry.Pos;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
-import java.util.Scanner;
 
- public class BlackJack {
+public class BlackJack extends Application {
 
-     private final ArrayList<String> deckK = new ArrayList<>(Arrays.asList(
-             "KA","K2","K3","K4","K5","K6","K7","K8","K9","K10","K11","K12","K13"
-     ));
-     private final ArrayList<String> deckP = new ArrayList<>(Arrays.asList(
-             "PA","P2","P3","P4","P5","P6","P7","P8","P9","P10","P11","P12","P13"
-     ));
-     private final ArrayList<String> deckT = new ArrayList<>(Arrays.asList(
-             "TA","T2","T3","T4","T5","T6","T7","T8","T9","T10","T11","T12","T13"
-     ));
-     private final ArrayList<String> deckC = new ArrayList<>(Arrays.asList(
-             "CA","C2","C3","C4","C5","C6","C7","C8","C9","C10","C11","C12","C13"
-     ));
-     private final ArrayList<ArrayList<String>> decks = new ArrayList<>(Arrays.asList(deckK, deckP, deckT, deckC));
-     private final ArrayList<Integer> deckValue = new ArrayList<>(Arrays.asList(11, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10));
-     private double money;
-     private double mise;
-     private boolean blackJack;
-     private  ArrayList<String>  playerCard;
-     private  ArrayList<String>  DealerCard;
+    // --- Logique du Deck ---
+    private final ArrayList<String> deckK = new ArrayList<>(Arrays.asList("KA","K2","K3","K4","K5","K6","K7","K8","K9","K10","K11","K12","K13"));
+    private final ArrayList<String> deckP = new ArrayList<>(Arrays.asList("PA","P2","P3","P4","P5","P6","P7","P8","P9","P10","P11","P12","P13"));
+    private final ArrayList<String> deckT = new ArrayList<>(Arrays.asList("TA","T2","T3","T4","T5","T6","T7","T8","T9","T10","T11","T12","T13"));
+    private final ArrayList<String> deckC = new ArrayList<>(Arrays.asList("CA","C2","C3","C4","C5","C6","C7","C8","C9","C10","C11","C12","C13"));
+    private final ArrayList<ArrayList<String>> decks = new ArrayList<>(Arrays.asList(deckK, deckP, deckT, deckC));
+    private final ArrayList<Integer> deckValue = new ArrayList<>(Arrays.asList(11, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10));
 
-     public ArrayList<String> getDeckK() {
-         return deckK;
-     }
-     public ArrayList<String> getDeckP() {
-         return deckP;
-     }
-     public ArrayList<String> getDeckT() {
-         return deckT;
-     }
-     public ArrayList<String> getDeckC() {
-         return deckC;
-     }
-     public ArrayList<ArrayList<String>> getDecks() {
-         return decks;
-     }
-     public ArrayList<Integer> getDeckValue() {
-         return deckValue;
-     }
-     public double getMoney() {
-         return money;
-     }
-     public double getMise() {
-         return mise;
-     }
-     public boolean isBlackJack() {
-         return blackJack;
-     }
-     public void setBlackJack(boolean blackJack) {
-         this.blackJack = blackJack;
-     }
-     public void setMise(double mise) {
-         this.mise = mise;
-     }
-     public void setMoney(double money) {
-         this.money = money;
-     }
-     public ArrayList<String> getPlayerCard() {
-         return playerCard;
-     }
-     public void setPlayerCard(ArrayList<String> playerCard) {
-         this.playerCard = playerCard;
-     }
-     public ArrayList<String> getDealerCard() {
-         return DealerCard;
-     }
-     public void setDealerCard(ArrayList<String> dealerCard) {
-         DealerCard = dealerCard;
-     }
+    // --- État du jeu ---
+    private double money = 100.0;
+    private double mise = 0;
+    private ArrayList<String> playerCard = new ArrayList<>();
+    private ArrayList<String> dealerCard = new ArrayList<>();
 
-     public BlackJack(double money){
-        this.money = money;
-        this.mise = 0;
-        this.playerCard = new ArrayList<>();
-        this.DealerCard = new ArrayList<>();
-        this.blackJack = false;
-     }
+    // --- Éléments UI ---
+    private Label lblSolde = new Label("Solde : 100€");
+    private Label lblDealer = new Label("Dealer : ?");
+    private Label lblPlayer = new Label("Joueur : ?");
+    private Label lblResultat = new Label("Placez votre mise !");
+    private TextField txtMise = new TextField();
+    private Button btnHit = new Button("Tirer (Hit)");
+    private Button btnStand = new Button("Rester (Stand)");
+    private Button btnMiser = new Button("Parier");
 
-     public void startGame() {
-         if (getMoney() > 0) {
-             Scanner scanner = new Scanner(System.in);
-             hit(getPlayerCard());
-             hit(getPlayerCard());
-             hit(getDealerCard());
-             hit(getDealerCard());
-             System.out.println("Vos cartes : " + getPlayerCard() + " (Total: " + handPower(getPlayerCard()) + ")");
-             System.out.println("Carte visible du Dealer : " + getDealerCard().get(0));
-             verifBlackJack();
-             if (!isBlackJack()) {
-                 String choix = "";
-                 while (handPower(getPlayerCard()) < 21) {
-                     System.out.print("Voulez-vous tirer une carte ? (y/n) : ");
-                     choix = scanner.nextLine();
-
-                     if (choix.equalsIgnoreCase("y")) {
-                         hit(getPlayerCard());
-                         System.out.println("Nouvelle carte ! Votre main : " + getPlayerCard() + " (Total: " + handPower(getPlayerCard()) + ")");
-                     } else {
-                         break;
-                     }
-                 }
-                 if (handPower(getPlayerCard()) <= 21) {
-                     stand();
-                 } else {
-                     System.out.println("Bust ! Vous avez dépassé 21.");
-                     winOrNot(getPlayerCard(), getDealerCard());
-                 }
-             }
-         } else {
-             System.out.print("Vous êtes ruiné !");
-         }
-     }
-
-    public void newGain(boolean blackJack){
-         double gain = 2.0;
-         if (blackJack){
-             gain =2.5;
-         }
-        setMoney(getMoney() + getMise()*gain);
-        System.out.print("vous avez gagnez : " + getMise());
-        System.out.print("votre solde est de : " + getMoney());
+    public static void lancer(Stage stage) {
+        new BlackJack().start(stage);
     }
 
-    public void winOrNot(ArrayList<String> playerHand, ArrayList<String> dealerHand) {
-        int powerPlayer = handPower(playerHand);
-        int powerDealer = handPower(dealerHand);
+    @Override
+    public void start(Stage stage) {
+        // Design simple
+        lblSolde.setStyle("-fx-font-weight: bold; -fx-font-size: 16px;");
+        lblResultat.setStyle("-fx-text-fill: blue; -fx-font-weight: bold;");
+        txtMise.setPromptText("Mise...");
+        txtMise.setMaxWidth(80);
 
-        if (powerPlayer == powerDealer || powerPlayer > 21 && powerDealer > 21){
-            setMoney(getMoney()+getMise());
-            resetHand();
-        } else if (powerPlayer > powerDealer && powerPlayer <=21){
-            newGain(isBlackJack());
-            resetHand();
-         } else {
-             System.out.print("vous avez perdu");
-             System.out.print("votre solde est de : " + getMoney());
-         }
+        btnHit.setDisable(true);
+        btnStand.setDisable(true);
+
+        // Actions
+        btnMiser.setOnAction(e -> demarrerManche());
+        btnHit.setOnAction(e -> tirerJoueur());
+        btnStand.setOnAction(e -> rester());
+
+        Button btnRetour = new Button("⬅ Menu");
+        btnRetour.setOnAction(e -> main.MainView.lancer(stage));
+
+        // Layouts
+        HBox actions = new HBox(10, btnHit, btnStand);
+        actions.setAlignment(Pos.CENTER);
+
+        HBox miseBox = new HBox(10, txtMise, btnMiser);
+        miseBox.setAlignment(Pos.CENTER);
+
+        VBox root = new VBox(20, lblSolde, lblDealer, lblPlayer, lblResultat, miseBox, actions, btnRetour);
+        root.setAlignment(Pos.CENTER);
+        root.setStyle("-fx-padding: 30; -fx-background-color: #2e7d32;"); // Fond vert tapis de jeu
+
+        stage.setScene(new Scene(root, 400, 450));
+        stage.setTitle("JavaFX BlackJack");
+        stage.show();
     }
 
-    public int handPower(ArrayList<String> hand){
-        int power = 0;
-        ArrayList<String> theDeck = null;
+    private void demarrerManche() {
+        try {
+            double valueMise = Double.parseDouble(txtMise.getText());
+            if (valueMise > 0 && valueMise <= money) {
+                mise = valueMise;
+                money -= mise;
+                resetJeu();
 
-        for ( int i = 0; i< hand.size() ; i++ )
-        {
-            String slice = hand.get(i).substring(0, 1);
-            theDeck = switch (slice) {
-                case "C" -> getDeckC();
-                case "P" -> getDeckP();
-                case "T" -> getDeckT();
-                case "K" -> getDeckK();
-                default -> theDeck;
-            };
+                hit(playerCard); hit(playerCard);
+                hit(dealerCard); hit(dealerCard);
 
-            for ( int y = 0; y< theDeck.size() ; y++ )
-            {
-                if (theDeck.get(y).equals(hand.get(i))){
-                    power += getDeckValue().get(y);
-                    String slice1 = hand.get(i).substring(1, 2);
-                    String slice2 = hand.get(i).substring(1, 2);
-                    if (power>21 &&( slice1.equals("A") || slice2.equals("A") )){
-                        power -=10;
-                    }
-                }
+                majAffichage(false);
+                btnHit.setDisable(false);
+                btnStand.setDisable(false);
+                btnMiser.setDisable(true);
+                lblResultat.setText("Bonne chance !");
+
+                if(handPower(playerCard) == 21) rester(); // BlackJack auto
+            } else {
+                lblResultat.setText("Mise invalide !");
             }
+        } catch (Exception ex) { lblResultat.setText("Entrez un nombre !"); }
+    }
+
+    private void tirerJoueur() {
+        hit(playerCard);
+        majAffichage(false);
+        if (handPower(playerCard) > 21) {
+            lblResultat.setText("Bust ! Vous avez dépassé 21.");
+            finDeManche();
+        }
+    }
+
+    private void rester() {
+        while (handPower(dealerCard) < 17) {
+            hit(dealerCard);
+        }
+        majAffichage(true);
+        determinerVainqueur();
+        finDeManche();
+    }
+
+    private void determinerVainqueur() {
+        int p = handPower(playerCard);
+        int d = handPower(dealerCard);
+
+        if (p > 21) lblResultat.setText("Perdu (Bust)");
+        else if (d > 21 || p > d) {
+            double gain = (p == 21 && playerCard.size() == 2) ? mise * 2.5 : mise * 2;
+            money += gain;
+            lblResultat.setText("Gagné ! +" + gain + "€");
+        } else if (p == d) {
+            money += mise;
+            lblResultat.setText("Égalité (Push)");
+        } else {
+            lblResultat.setText("Le Dealer gagne.");
+        }
+    }
+
+    private void finDeManche() {
+        btnHit.setDisable(true);
+        btnStand.setDisable(true);
+        btnMiser.setDisable(false);
+        lblSolde.setText("Solde : " + money + "€");
+    }
+
+    private void majAffichage(boolean devoilerDealer) {
+        lblPlayer.setText("Joueur : " + playerCard + " (Total: " + handPower(playerCard) + ")");
+        if (devoilerDealer) {
+            lblDealer.setText("Dealer : " + dealerCard + " (Total: " + handPower(dealerCard) + ")");
+        } else {
+            lblDealer.setText("Dealer : [" + dealerCard.get(0) + ", ?]");
+        }
+        lblSolde.setText("Solde : " + money + "€");
+    }
+
+    private void resetJeu() {
+        playerCard.clear();
+        dealerCard.clear();
+    }
+
+    private void hit(ArrayList<String> user) {
+        Random random = new Random();
+        int randomType = random.nextInt(4);
+        ArrayList<String> theDeck = decks.get(randomType);
+        user.add(theDeck.get(random.nextInt(13)));
+    }
+
+    private int handPower(ArrayList<String> hand) {
+        int power = 0;
+        int asCount = 0;
+        for (String card : hand) {
+            String valueStr = card.substring(1);
+            int index = deckK.indexOf("K" + valueStr);
+            if (index == -1) index = deckP.indexOf("P" + valueStr);
+            if (index == -1) index = deckT.indexOf("T" + valueStr);
+            if (index == -1) index = deckC.indexOf("C" + valueStr);
+
+            int val = deckValue.get(index);
+            if (val == 11) asCount++;
+            power += val;
+        }
+        while (power > 21 && asCount > 0) {
+            power -= 10;
+            asCount--;
         }
         return power;
     }
 
-     public void resetHand(){
-         setDealerCard(new ArrayList<>());
-         setPlayerCard(new ArrayList<>());
-         setMise(0);
-         setBlackJack(false);
-     }
-
-    public void hit(ArrayList<String> user){
-        Random random = new Random();
-        int randomType = random.nextInt(4);
-        ArrayList<String> theDeck = getDecks().get(randomType);
-        int randomCard = random.nextInt(13);
-        user.add(theDeck.get(randomCard));
-    }
-
-    public void dealerComportement(){
-        while (handPower(getDealerCard())< 17) {
-             hit(getDealerCard());
-        }
-    }
-
-    public void howMany(double theMise){
-         if (theMise> getMoney()){
-             System.out.print("vous n'avez pas assez d'argent");
-         } else {
-             setMise(theMise);
-             setMoney(getMoney()-theMise);
-         }
-    }
-
-     public void stand() {
-         dealerComportement();
-         winOrNot(getPlayerCard(), getDealerCard());
-     }
-
-     public void verifBlackJack(){
-         if (getPlayerCard().size() == 2 && handPower(getPlayerCard()) == 21) {
-             setBlackJack(true);
-             stand();
-         }
-     }
- }
+    public static void main(String[] args) { launch(args); }
+}

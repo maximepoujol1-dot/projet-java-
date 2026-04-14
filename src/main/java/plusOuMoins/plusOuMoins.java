@@ -61,8 +61,7 @@ public class plusOuMoins extends Application {
             valider.setDisable(false);
             rejouer.setVisible(false);
         });
-
-        // ✅ Appel de la méthode que je viens d'ajouter dans MainView
+        
         retour.setOnAction(e -> main.MainView.lancer(stage));
 
         VBox root = new VBox(10, instruction, input, valider, feedback, rejouer, retour);
@@ -71,7 +70,7 @@ public class plusOuMoins extends Application {
 
         stage.setScene(new Scene(root, 350, 280));
         stage.setTitle("Plus ou Moins");
-        stage.show(); // ✅ AJOUTÉ : Pour afficher la fenêtre du jeu
+        stage.show();
     }
 
     public static void main(String[] args) {
