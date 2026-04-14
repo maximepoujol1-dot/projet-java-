@@ -71,7 +71,6 @@ public class BlackJack extends Application {
 
         VBox root = new VBox(20, lblSolde, lblDealer, lblPlayer, lblResultat, miseBox, actions, btnRetour);
         root.setAlignment(Pos.CENTER);
-        root.setStyle("-fx-padding: 30; -fx-background-color: #2e7d32;"); // Fond vert tapis de jeu
 
         stage.setScene(new Scene(root, 400, 450));
         stage.setTitle("JavaFX BlackJack");
