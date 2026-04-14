@@ -3,6 +3,7 @@ package blackJack;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
+import java.util.Scanner;
 
  public class BlackJack {
 
@@ -83,20 +84,40 @@ import java.util.Random;
         this.blackJack = false;
      }
 
-    public void startGame(){
-         if (getMoney()>0){
-            hit(getPlayerCard());
-            hit(getPlayerCard());
-            hit(getDealerCard());
-            hit(getDealerCard());
-            System.out.print(getPlayerCard().get(0));
-            System.out.print(getPlayerCard().get(1));
-            System.out.print(getDealerCard().get(0));
-            verifBlackJack();
+     public void startGame() {
+         if (getMoney() > 0) {
+             Scanner scanner = new Scanner(System.in);
+             hit(getPlayerCard());
+             hit(getPlayerCard());
+             hit(getDealerCard());
+             hit(getDealerCard());
+             System.out.println("Vos cartes : " + getPlayerCard() + " (Total: " + handPower(getPlayerCard()) + ")");
+             System.out.println("Carte visible du Dealer : " + getDealerCard().get(0));
+             verifBlackJack();
+             if (!isBlackJack()) {
+                 String choix = "";
+                 while (handPower(getPlayerCard()) < 21) {
+                     System.out.print("Voulez-vous tirer une carte ? (y/n) : ");
+                     choix = scanner.nextLine();
+
+                     if (choix.equalsIgnoreCase("y")) {
+                         hit(getPlayerCard());
+                         System.out.println("Nouvelle carte ! Votre main : " + getPlayerCard() + " (Total: " + handPower(getPlayerCard()) + ")");
+                     } else {
+                         break;
+                     }
+                 }
+                 if (handPower(getPlayerCard()) <= 21) {
+                     stand();
+                 } else {
+                     System.out.println("Bust ! Vous avez dépassé 21.");
+                     winOrNot(getPlayerCard(), getDealerCard());
+                 }
+             }
          } else {
-            System.out.print("vous êtes ruiné");
+             System.out.print("Vous êtes ruiné !");
          }
-    }
+     }
 
     public void newGain(boolean blackJack){
          double gain = 2.0;
