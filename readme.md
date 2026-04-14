@@ -1,10 +1,10 @@
-# 🎮 Java Multi-Games Collection
+#  Java Multi-Games Collection
 
 Une suite de jeux classiques développée en **JavaFX** (BlackJack, Pendu, Memory, etc.), regroupée sous une interface unique et fluide.
 
 ---
 
-## 🛠️ Installation de l'environnement
+##  Installation de l'environnement
 
 Pour exécuter ce projet, tu as besoin de configurer **IntelliJ IDEA** avec le SDK JavaFX.
 
@@ -21,7 +21,7 @@ Pour exécuter ce projet, tu as besoin de configurer **IntelliJ IDEA** avec le S
 
 ---
 
-## 🚀 Comment lancer le jeu ?
+##  Comment lancer le jeu ?
 
 Tout se passe depuis la classe principale : **`MainView.java`**.
 
@@ -34,7 +34,7 @@ Tout se passe depuis la classe principale : **`MainView.java`**.
 
 ---
 
-## 🕹️ Liste des Jeux
+##  Liste des Jeux
 * **BlackJack** : Atteins 21 sans sauter !
 * **Le Pendu** : Trouve le mot caché avant la sentence.
 * **Memory** : Retrouve toutes les paires de cartes.
