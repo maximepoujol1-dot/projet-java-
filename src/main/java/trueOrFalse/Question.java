@@ -1,8 +1,9 @@
 package trueOrFalse;
 
 public class Question {
-    String texte;
-    boolean reponse;
+
+    public String texte;
+    public boolean reponse;
 
     public Question(String texte, boolean reponse) {
         this.texte = texte;

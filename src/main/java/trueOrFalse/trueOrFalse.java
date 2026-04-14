@@ -1,5 +1,15 @@
 package trueOrFalse;
 
+import javafx.scene.control.Label;
+import javafx.application.Application;
+import javafx.geometry.Pos;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
+import java.util.Random;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Scanner;
@@ -21,7 +31,7 @@ public class trueOrFalse {
 
         int score = 0;
 
-        System.out.println("=== BIENVENUE AU QUIZ VRAI/FAUX ===");
+        Label instruction = new Label("BIENVENUE AU QUIZ VRAI/FAUX");
         System.out.println("Répondez par 'vrai' ou 'faux'.");
 
         for (Question q : baseDeDonnees) {

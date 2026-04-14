@@ -8,6 +8,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 // Importation de ton jeu
 import plusOuMoins.plusOuMoins;
+import trueOrFalse.trueOrFalse;
 
 public class MainView extends Application {
 
@@ -28,12 +29,12 @@ public class MainView extends Application {
 
         // ✅ ON RELIE LE BOUTON AU JEU
         btnPlusOuMoins.setOnAction(e -> plusOuMoins.lancer(stage));
+        btnTrueOrFalse.setOnAction(e -> trueOrFalse.lancer(stage));
 
         // Les autres restent vides pour l'instant
         btnBlackJack.setOnAction(e -> System.out.println("Lancer BlackJack"));
         btnMemory.setOnAction(e -> System.out.println("Lancer Memory"));
         btnPendu.setOnAction(e -> System.out.println("Lancer Pendu"));
-        btnTrueOrFalse.setOnAction(e -> System.out.println("Lancer TrueOrFalse"));
 
         VBox root = new VBox(10, titre, btnBlackJack, btnMemory, btnPendu, btnPlusOuMoins, btnTrueOrFalse);
         root.setStyle("-fx-padding: 20; -fx-alignment: center;");
