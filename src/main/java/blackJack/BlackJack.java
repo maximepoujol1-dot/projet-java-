@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
 
- class BlackJack {
+ public class BlackJack {
 
      private final ArrayList<String> deckK = new ArrayList<>(Arrays.asList(
              "KA","K2","K3","K4","K5","K6","K7","K8","K9","K10","K11","K12","K13"
